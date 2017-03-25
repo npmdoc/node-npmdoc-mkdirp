@@ -46,11 +46,11 @@
     font-weight: bold;
 }
 </style>
-<h1>api-documentation for
+<h1>api documentation for
     <a
-        
+
         href="https://github.com/substack/node-mkdirp#readme"
-        
+
     >mkdirp (v0.5.1)</a>
 </h1>
 <h4>Recursively mkdir, like `mkdir -p`</h4>
@@ -58,44 +58,44 @@
     href="#apidoc.tableOfContents"
     id="apidoc.tableOfContents"
 ><h1>table of contents</h1></a><ol>
-    
+
     <li class="apidocModuleLi"><a href="#apidoc.module.mkdirp">module mkdirp</a><ol>
-        
+
         <li>
-            
+
             <a class="apidocElementLiA" href="#apidoc.element.mkdirp.mkdirp">
             function <span class="apidocSignatureSpan"></span>mkdirp
             <span class="apidocSignatureSpan">(p, opts, f, made)</span>
             </a>
-            
+
         </li>
-        
+
         <li>
-            
+
             <a class="apidocElementLiA" href="#apidoc.element.mkdirp.mkdirP">
             function <span class="apidocSignatureSpan">mkdirp.</span>mkdirP
             <span class="apidocSignatureSpan">(p, opts, f, made)</span>
             </a>
-            
+
         </li>
-        
+
         <li>
-            
+
             <a class="apidocElementLiA" href="#apidoc.element.mkdirp.sync">
             function <span class="apidocSignatureSpan">mkdirp.</span>sync
             <span class="apidocSignatureSpan">(p, opts, made)</span>
             </a>
-            
+
         </li>
-        
+
     </ol></li>
-    
+
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.mkdirp" id="apidoc.module.mkdirp">module mkdirp</a></h1>
-    
-    
+
+
     <h2>
         <a href="#apidoc.element.mkdirp.mkdirp" id="apidoc.element.mkdirp.mkdirp">
         function <span class="apidocSignatureSpan"></span>mkdirp
@@ -111,18 +111,18 @@
     else if (!opts || typeof opts !== &#x27;object&#x27;) {
         opts = { mode: opts };
     }
-    
+
     var mode = opts.mode;
     var xfs = opts.fs || fs;
-    
+
     if (mode === undefined) {
         mode = _0777 &#x26; (~process.umask());
     }
     if (!made) made = null;
-    
+
     var cb = f || function () {};
     p = path.resolve(p);
-    
+
     xfs.mkdir(p, mode, function (er) {
         if (!er) {
             made = made || p;
@@ -152,9 +152,9 @@
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
-    
-    
-    
+
+
+
     <h2>
         <a href="#apidoc.element.mkdirp.mkdirP" id="apidoc.element.mkdirp.mkdirP">
         function <span class="apidocSignatureSpan">mkdirp.</span>mkdirP
@@ -170,18 +170,18 @@
     else if (!opts || typeof opts !== &#x27;object&#x27;) {
         opts = { mode: opts };
     }
-    
+
     var mode = opts.mode;
     var xfs = opts.fs || fs;
-    
+
     if (mode === undefined) {
         mode = _0777 &#x26; (~process.umask());
     }
     if (!made) made = null;
-    
+
     var cb = f || function () {};
     p = path.resolve(p);
-    
+
     xfs.mkdir(p, mode, function (er) {
         if (!er) {
             made = made || p;
@@ -211,9 +211,9 @@
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
-    
-    
-    
+
+
+
     <h2>
         <a href="#apidoc.element.mkdirp.sync" id="apidoc.element.mkdirp.sync">
         function <span class="apidocSignatureSpan">mkdirp.</span>sync
@@ -225,10 +225,10 @@
     if (!opts || typeof opts !== &#x27;object&#x27;) {
         opts = { mode: opts };
     }
-    
+
     var mode = opts.mode;
     var xfs = opts.fs || fs;
-    
+
     if (mode === undefined) {
         mode = _0777 &#x26; (~process.umask());
     }
@@ -282,8 +282,8 @@ treated as the `opts.mode`.
 If `opts.mode` isn&#x27;t specified, it defaults to `0777 &#x26; (~process.umask())`.
 ...</pre></li>
     </ul>
-    
-    
+
+
 </div>
 
 <div class="apidocFooterDiv">
