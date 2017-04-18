@@ -90,6 +90,37 @@
 
     </ol></li>
 
+    <li class="apidocModuleLi"><a href="#apidoc.module.mkdirp.mkdirP">module mkdirp.mkdirP</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mkdirp.mkdirP.mkdirP">
+            function <span class="apidocSignatureSpan">mkdirp.</span>mkdirP
+            <span class="apidocSignatureSpan">(p, opts, f, made)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mkdirp.mkdirP.mkdirp">
+            function <span class="apidocSignatureSpan">mkdirp.mkdirP.</span>mkdirp
+            <span class="apidocSignatureSpan">(p, opts, f, made)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mkdirp.mkdirP.sync">
+            function <span class="apidocSignatureSpan">mkdirp.mkdirP.</span>sync
+            <span class="apidocSignatureSpan">(p, opts, made)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
 </ol></div>
 
 <div class="apidocSectionDiv">
@@ -217,6 +248,200 @@
     <h2>
         <a href="#apidoc.element.mkdirp.sync" id="apidoc.element.mkdirp.sync">
         function <span class="apidocSignatureSpan">mkdirp.</span>sync
+        <span class="apidocSignatureSpan">(p, opts, made)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function sync(p, opts, made) {
+    if (!opts || typeof opts !== &#x27;object&#x27;) {
+        opts = { mode: opts };
+    }
+
+    var mode = opts.mode;
+    var xfs = opts.fs || fs;
+
+    if (mode === undefined) {
+        mode = _0777 &#x26; (~process.umask());
+    }
+    if (!made) made = null;
+
+    p = path.resolve(p);
+
+    try {
+        xfs.mkdirSync(p, mode);
+        made = made || p;
+    }
+    catch (err0) {
+        switch (err0.code) {
+            case &#x27;ENOENT&#x27; :
+                made = sync(path.dirname(p), opts, made);
+                sync(p, opts, made);
+                break;
+
+            // In the case of any other error, just see if there&#x27;s a dir
+            // there already.  If so, then hooray!  If not, then something
+            // is borked.
+            default:
+                var stat;
+                try {
+                    stat = xfs.statSync(p);
+                }
+                catch (err1) {
+                    throw err0;
+                }
+                if (!stat.isDirectory()) throw err0;
+                break;
+        }
+    }
+
+    return made;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+`cb(err, made)` fires with the error or the first directory `made`
+that had to be created, if any.
+
+You can optionally pass in an alternate `fs` implementation by passing in
+`opts.fs`. Your implementation should have `opts.fs.mkdir(path, mode, cb)` and
+`opts.fs.stat(path, cb)`.
+
+## mkdirp.<span class="apidocCodeKeywordSpan">sync</span>(dir, opts)
+
+Synchronously create a new directory and any necessary subdirectories at `dir`
+with octal permission string `opts.mode`. If `opts` is a non-object, it will be
+treated as the `opts.mode`.
+
+If `opts.mode` isn&#x27;t specified, it defaults to `0777 &#x26; (~process.umask())`.
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.mkdirp.mkdirP" id="apidoc.module.mkdirp.mkdirP">module mkdirp.mkdirP</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.mkdirp.mkdirP.mkdirP" id="apidoc.element.mkdirp.mkdirP.mkdirP">
+        function <span class="apidocSignatureSpan">mkdirp.</span>mkdirP
+        <span class="apidocSignatureSpan">(p, opts, f, made)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function mkdirP(p, opts, f, made) {
+    if (typeof opts === &#x27;function&#x27;) {
+        f = opts;
+        opts = {};
+    }
+    else if (!opts || typeof opts !== &#x27;object&#x27;) {
+        opts = { mode: opts };
+    }
+
+    var mode = opts.mode;
+    var xfs = opts.fs || fs;
+
+    if (mode === undefined) {
+        mode = _0777 &#x26; (~process.umask());
+    }
+    if (!made) made = null;
+
+    var cb = f || function () {};
+    p = path.resolve(p);
+
+    xfs.mkdir(p, mode, function (er) {
+        if (!er) {
+            made = made || p;
+            return cb(null, made);
+        }
+        switch (er.code) {
+            case &#x27;ENOENT&#x27;:
+                mkdirP(path.dirname(p), opts, function (er, made) {
+                    if (er) cb(er, made);
+                    else mkdirP(p, opts, cb, made);
+                });
+                break;
+
+            // In the case of any other error, just see if there&#x27;s a dir
+            // there already.  If so, then hooray!  If not, then something
+            // is borked.
+            default:
+                xfs.stat(p, function (er2, stat) {
+                    // if the stat fails, then that&#x27;s super weird.
+                    // let the original error be the failure reason.
+                    if (er2 || !stat.isDirectory()) cb(er, made)
+                    else cb(null, made);
+                });
+                break;
+        }
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mkdirp.mkdirP.mkdirp" id="apidoc.element.mkdirp.mkdirP.mkdirp">
+        function <span class="apidocSignatureSpan">mkdirp.mkdirP.</span>mkdirp
+        <span class="apidocSignatureSpan">(p, opts, f, made)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function mkdirP(p, opts, f, made) {
+    if (typeof opts === &#x27;function&#x27;) {
+        f = opts;
+        opts = {};
+    }
+    else if (!opts || typeof opts !== &#x27;object&#x27;) {
+        opts = { mode: opts };
+    }
+
+    var mode = opts.mode;
+    var xfs = opts.fs || fs;
+
+    if (mode === undefined) {
+        mode = _0777 &#x26; (~process.umask());
+    }
+    if (!made) made = null;
+
+    var cb = f || function () {};
+    p = path.resolve(p);
+
+    xfs.mkdir(p, mode, function (er) {
+        if (!er) {
+            made = made || p;
+            return cb(null, made);
+        }
+        switch (er.code) {
+            case &#x27;ENOENT&#x27;:
+                mkdirP(path.dirname(p), opts, function (er, made) {
+                    if (er) cb(er, made);
+                    else mkdirP(p, opts, cb, made);
+                });
+                break;
+
+            // In the case of any other error, just see if there&#x27;s a dir
+            // there already.  If so, then hooray!  If not, then something
+            // is borked.
+            default:
+                xfs.stat(p, function (er2, stat) {
+                    // if the stat fails, then that&#x27;s super weird.
+                    // let the original error be the failure reason.
+                    if (er2 || !stat.isDirectory()) cb(er, made)
+                    else cb(null, made);
+                });
+                break;
+        }
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mkdirp.mkdirP.sync" id="apidoc.element.mkdirp.mkdirP.sync">
+        function <span class="apidocSignatureSpan">mkdirp.mkdirP.</span>sync
         <span class="apidocSignatureSpan">(p, opts, made)</span>
         </a>
     </h2>
